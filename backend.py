@@ -2386,37 +2386,104 @@ def get_user_stats(user_id):
         })
     except Exception as e:
         return jsonify({"status":"error","message":str(e)}), 500
+@app.route('/api/reports/heatmap', methods=['GET'])
+def get_heatmap():
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("SELECT lat, lon, upvotes FROM reports WHERE status != 'rejected'")
+        reports = c.fetchall()
+        conn.close()
+        heatmap_data = [{"lat": r[0], "lon": r[1], "weight": min(1.0, 0.5 + (r[2] * 0.1))} for r in reports]
+        return jsonify(heatmap_data)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/api/admin/reports', methods=['GET'])
+def get_pending_reports():
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("SELECT id, description, category, lat, lon FROM reports WHERE status = 'pending'")
+        reports = [{"id": r[0], "desc": r[1], "cat": r[2], "lat": r[3], "lon": r[4]} for r in c.fetchall()]
+        conn.close()
+        return jsonify(reports)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/admin/reports/<report_id>', methods=['POST'])
+def update_report_status(report_id):
+    try:
+        data = request.json
+        new_status = data.get('status')
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("UPDATE reports SET status = ?, verified = ? WHERE id = ?", (new_status, 1 if new_status == 'verified' else 0, report_id))
+        conn.commit()
+        conn.close()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/users/<user_id>/history/stats', methods=['GET'])
+def get_zone_stats(user_id):
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("SELECT zone_level, COUNT(*) FROM zone_history WHERE user_id = ? AND strftime('%Y-%m', transited_at) = strftime('%Y-%m', 'now') GROUP BY zone_level", (user_id,))
+        stats = {row[0]: row[1] for row in c.fetchall()}
+        conn.close()
+        return jsonify(stats)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/sos', methods=['POST'])
+def trigger_sos():
+    try:
+        data = request.json
+        user_id = data.get('user_id', 'anonymous')
+        lat = data.get('lat')
+        lon = data.get('lon')
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("INSERT INTO reports (id, user_id, category, description, lat, lon, status, verified) VALUES (?, ?, 'sos', '¡SOS! USUARIO EN PELIGRO', ?, ?, 'verified', 1)", (str(datetime.now().timestamp()), user_id, lat, lon))
+        conn.commit()
+        conn.close()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/places/safe-havens', methods=['GET'])
+def get_safe_havens():
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("SELECT id, name, category, lat, lon, address FROM places WHERE category = 'refugio' OR tags LIKE '%seguro%'")
+        places = [{"id": r[0], "name": r[1], "category": r[2], "lat": r[3], "lon": r[4], "address": r[5]} for r in c.fetchall()]
+        conn.close()
+        return jsonify(places)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/api/health', methods=['GET'])
 def health():
     try:
         conn = sqlite3.connect(DB_FILE)
         c = conn.cursor()
-        c.execute("SELECT COUNT(*) FROM users");      users  = c.fetchone()[0]
-        c.execute("SELECT COUNT(*) FROM reports WHERE verified=1"); reps = c.fetchone()[0]
-        c.execute("SELECT COUNT(*) FROM places");     places = c.fetchone()[0]
-        c.execute("SELECT COUNT(*) FROM risk_zones WHERE active=1"); zones = c.fetchone()[0]
+        c.execute("SELECT COUNT(*) FROM users")
+        users = c.fetchone()[0]
+        c.execute("SELECT COUNT(*) FROM reports WHERE verified=1")
+        reps = c.fetchone()[0]
+        c.execute("SELECT COUNT(*) FROM places")
+        places = c.fetchone()[0]
+        c.execute("SELECT COUNT(*) FROM risk_zones WHERE active=1")
+        zones = c.fetchone()[0]
         conn.close()
-        return jsonify({
-            "status": "healthy",
-            "version": "2.0.0",
-            "app": "Zeta – Navegación Segura Chihuahua",
-            "database": "connected",
-            "stats": {"users":users,"verified_reports":reps,"places":places,"active_zones":zones},
-            "timestamp": datetime.now().isoformat()
-        })
+        return jsonify({"status": "healthy", "version": "2.1.0", "app": "Zeta", "database": "connected", "stats": {"users":users,"verified_reports":reps,"places":places,"active_zones":zones}, "timestamp": datetime.now().isoformat()})
     except Exception as e:
         return jsonify({"status":"error","message":str(e)}), 500
 
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 5002))
-    print("""
-╔══════════════════════════════════════════╗
-║   ZETA – Navegación Segura Chihuahua     ║
-║   Backend v2.0  –  Puerto: {port}           ║
-║   http://localhost:{port}/api/health        ║
-╚══════════════════════════════════════════╝
-""".format(port=port))
     app.run(host='0.0.0.0', port=port, debug=False)
