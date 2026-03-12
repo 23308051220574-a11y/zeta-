@@ -1239,5 +1239,227 @@ function prevAv(e) { const f=e.target.files[0]; if(!f)return; const rd=new FileR
 window.addEventListener('beforeunload',()=>{ if(watchId)navigator.geolocation.clearWatch(watchId); if(trackTimer)clearInterval(trackTimer); });
 console.log('%cZETA v2.0%c Táctica · Chihuahua','color:#00d4ff;font-weight:900;font-size:18px;font-family:monospace','color:#4a6480;font-size:11px');
 </script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+<div id="uber-tips" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:90%;background:var(--card);border:2px solid var(--warn);border-radius:var(--rL);padding:15px;z-index:1000;display:none;box-shadow:var(--shL);">
+<div style="display:flex;align-items:center;gap:15px;">
+<div style="font-size:30px;">⚠️</div>
+<div>
+<h4 style="color:var(--warn);margin-bottom:5px;font-family:var(--fT);letter-spacing:1px;">Aviso Táctico</h4>
+<p id="tip-text-uber" style="font-size:13px;color:var(--paper);"></p>
+</div>
+<button onclick="document.getElementById('uber-tips').style.display='none'" style="background:none;border:none;color:var(--paper);font-size:20px;cursor:pointer;margin-left:auto;">×</button>
+</div>
+</div>
+
+<div id="admin-panel" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(4,8,16,0.95);z-index:2000;display:none;padding:20px;overflow-y:auto;backdrop-filter:blur(10px);">
+<h2 style="color:var(--cyan);font-family:var(--fT);font-size:30px;margin-bottom:20px;text-align:center;margin-top:40px;">PANEL DE CONTROL</h2>
+<button onclick="document.getElementById('admin-panel').style.display='none'" style="position:absolute;top:20px;right:20px;background:var(--err);border:none;color:#fff;padding:10px 15px;border-radius:10px;cursor:pointer;font-weight:bold;">Cerrar</button>
+<div id="admin-reports-list" style="display:flex;flex-direction:column;gap:15px;padding-bottom:50px;"></div>
+</div>
+
+<button id="btn-voice-report" onclick="startVoiceReport()" style="position:fixed;bottom:160px;right:12px;width:48px;height:48px;border-radius:50%;background:var(--cyan);color:var(--ink);border:none;box-shadow:var(--shL);z-index:800;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">🎤</button>
+
+<script>
+let heatLayer;
+async function loadHeatmap(){
+    try{
+        const res=await fetch(`${API}/reports/heatmap`);
+        const data=await res.json();
+        const pts=data.map(p=>[p.lat,p.lon,p.weight]);
+        if(heatLayer) map.removeLayer(heatLayer);
+        heatLayer=L.heatLayer(pts,{radius:25,blur:15,maxZoom:15,gradient:{0.4:'blue',0.6:'cyan',0.7:'lime',0.8:'yellow',1.0:'red'}}).addTo(map);
+    }catch(e){}
+}
+setTimeout(loadHeatmap,2000);
+
+const secTips=["Evita transitar zonas con círculo negro después de las 10pm.","Las zonas verdes son tu mejor ruta. Priorízalas siempre.","En zona roja, no te detengas innecesariamente. Manten los seguros.","Viaja con la ventana subida en zonas amarillas."];
+function showUberTip(){
+    document.getElementById('tip-text-uber').innerText=secTips[Math.floor(Math.random()*secTips.length)];
+    const b=document.getElementById('uber-tips');
+    b.style.display='block';
+    setTimeout(()=>b.style.display='none',8000);
+}
+setTimeout(showUberTip,10000);
+setInterval(showUberTip,180000);
+
+async function openAdminPanel(){
+    document.getElementById('admin-panel').style.display='block';
+    const c=document.getElementById('admin-reports-list');
+    c.innerHTML='<p style="text-align:center;color:var(--dim);">Buscando...</p>';
+    try{
+        const res=await fetch(`${API}/admin/reports`);
+        const reps=await res.json();
+        if(!reps.length){c.innerHTML='<p style="text-align:center;color:var(--ok);">✅ Limpio</p>';return;}
+        c.innerHTML='';
+        reps.forEach(r=>{
+            c.innerHTML+=`<div style="background:var(--card);padding:15px;border-radius:15px;border:1px solid var(--wire);"><h4 style="color:var(--cyan);margin-bottom:5px;font-family:var(--fT);font-size:20px;">🚨 ${r.cat.toUpperCase()}</h4><p style="font-size:14px;color:var(--paper);margin-bottom:15px;">"${r.desc}"</p><div style="display:flex;gap:10px;"><button onclick="resolveRep('${r.id}','verified')" style="flex:1;background:var(--ok);border:none;padding:12px;border-radius:8px;color:var(--ink);font-weight:bold;cursor:pointer;">✅</button><button onclick="resolveRep('${r.id}','rejected')" style="flex:1;background:var(--err);border:none;padding:12px;border-radius:8px;color:#fff;font-weight:bold;cursor:pointer;">❌</button></div></div>`;
+        });
+    }catch(e){}
+}
+async function resolveRep(id,st){
+    try{
+        await fetch(`${API}/admin/reports/${id}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:st})});
+        openAdminPanel();
+    }catch(e){}
+}
+document.querySelector('.logo').addEventListener('dblclick',openAdminPanel);
+
+async function triggerSOS(){
+    if(!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(async pos=>{
+        try{
+            await fetch(`${API}/sos`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:me?me.id:'anon',lat:pos.coords.latitude,lon:pos.coords.longitude})});
+            alert("¡SOS ENVIADO!");
+        }catch(e){}
+    });
+}
+
+function startVoiceReport(){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){alert("No soportado");return;}
+    const rec=new SR();
+    rec.lang='es-MX';
+    rec.start();
+    rec.onresult=async(e)=>{
+        const txt=e.results[0][0].transcript;
+        if(txt.length<5) return;
+        navigator.geolocation.getCurrentPosition(async pos=>{
+            try{
+                await fetch(`${API}/reports`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:me?me.id:'anon',category:'sospechoso',description:`[VOZ]: ${txt}`,lat:pos.coords.latitude,lon:pos.coords.longitude})});
+                alert("Reporte voz: "+txt);
+            }catch(err){}
+        });
+    };
+}
+
+async function loadSafeHavens(){
+    try{
+        const res=await fetch(`${API}/places/safe-havens`);
+        const pl=await res.json();
+        const hIcon=L.divIcon({className:'',html:'<div style="font-size:24px;filter:drop-shadow(0 0 5px #00e676);">🏥</div>',iconSize:[24,24],iconAnchor:[12,12]});
+        pl.forEach(p=>{
+            L.marker([p.lat,p.lon],{icon:hIcon}).addTo(map).bindPopup(`<div style="padding:10px;text-align:center;"><h3 style="color:var(--ok);margin:0;">${p.name}</h3><p style="font-size:10px;margin:5px 0 0;">Refugio Seguro</p></div>`);
+        });
+        localStorage.setItem('zeta_havens',JSON.stringify(pl));
+    }catch(e){
+        const off=JSON.parse(localStorage.getItem('zeta_havens')||'[]');
+        const hIcon=L.divIcon({className:'',html:'<div style="font-size:24px;filter:drop-shadow(0 0 5px #00e676);">🏥</div>',iconSize:[24,24],iconAnchor:[12,12]});
+        off.forEach(p=>{L.marker([p.lat,p.lon],{icon:hIcon}).addTo(map);});
+    }
+}
+setTimeout(loadSafeHavens,3000);
+</script><script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+<div id="uber-tips" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:90%;background:var(--card);border:2px solid var(--warn);border-radius:var(--rL);padding:15px;z-index:1000;display:none;box-shadow:var(--shL);">
+<div style="display:flex;align-items:center;gap:15px;">
+<div style="font-size:30px;">⚠️</div>
+<div>
+<h4 style="color:var(--warn);margin-bottom:5px;font-family:var(--fT);letter-spacing:1px;">Aviso Táctico</h4>
+<p id="tip-text-uber" style="font-size:13px;color:var(--paper);"></p>
+</div>
+<button onclick="document.getElementById('uber-tips').style.display='none'" style="background:none;border:none;color:var(--paper);font-size:20px;cursor:pointer;margin-left:auto;">×</button>
+</div>
+</div>
+
+<div id="admin-panel" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(4,8,16,0.95);z-index:2000;display:none;padding:20px;overflow-y:auto;backdrop-filter:blur(10px);">
+<h2 style="color:var(--cyan);font-family:var(--fT);font-size:30px;margin-bottom:20px;text-align:center;margin-top:40px;">PANEL DE CONTROL</h2>
+<button onclick="document.getElementById('admin-panel').style.display='none'" style="position:absolute;top:20px;right:20px;background:var(--err);border:none;color:#fff;padding:10px 15px;border-radius:10px;cursor:pointer;font-weight:bold;">Cerrar</button>
+<div id="admin-reports-list" style="display:flex;flex-direction:column;gap:15px;padding-bottom:50px;"></div>
+</div>
+
+<button id="btn-voice-report" onclick="startVoiceReport()" style="position:fixed;bottom:160px;right:12px;width:48px;height:48px;border-radius:50%;background:var(--cyan);color:var(--ink);border:none;box-shadow:var(--shL);z-index:800;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">🎤</button>
+
+<script>
+let heatLayer;
+async function loadHeatmap(){
+    try{
+        const res=await fetch(`${API}/reports/heatmap`);
+        const data=await res.json();
+        const pts=data.map(p=>[p.lat,p.lon,p.weight]);
+        if(heatLayer) map.removeLayer(heatLayer);
+        heatLayer=L.heatLayer(pts,{radius:25,blur:15,maxZoom:15,gradient:{0.4:'blue',0.6:'cyan',0.7:'lime',0.8:'yellow',1.0:'red'}}).addTo(map);
+    }catch(e){}
+}
+setTimeout(loadHeatmap,2000);
+
+const secTips=["Evita transitar zonas con círculo negro después de las 10pm.","Las zonas verdes son tu mejor ruta. Priorízalas siempre.","En zona roja, no te detengas innecesariamente. Manten los seguros.","Viaja con la ventana subida en zonas amarillas."];
+function showUberTip(){
+    document.getElementById('tip-text-uber').innerText=secTips[Math.floor(Math.random()*secTips.length)];
+    const b=document.getElementById('uber-tips');
+    b.style.display='block';
+    setTimeout(()=>b.style.display='none',8000);
+}
+setTimeout(showUberTip,10000);
+setInterval(showUberTip,180000);
+
+async function openAdminPanel(){
+    document.getElementById('admin-panel').style.display='block';
+    const c=document.getElementById('admin-reports-list');
+    c.innerHTML='<p style="text-align:center;color:var(--dim);">Buscando...</p>';
+    try{
+        const res=await fetch(`${API}/admin/reports`);
+        const reps=await res.json();
+        if(!reps.length){c.innerHTML='<p style="text-align:center;color:var(--ok);">✅ Limpio</p>';return;}
+        c.innerHTML='';
+        reps.forEach(r=>{
+            c.innerHTML+=`<div style="background:var(--card);padding:15px;border-radius:15px;border:1px solid var(--wire);"><h4 style="color:var(--cyan);margin-bottom:5px;font-family:var(--fT);font-size:20px;">🚨 ${r.cat.toUpperCase()}</h4><p style="font-size:14px;color:var(--paper);margin-bottom:15px;">"${r.desc}"</p><div style="display:flex;gap:10px;"><button onclick="resolveRep('${r.id}','verified')" style="flex:1;background:var(--ok);border:none;padding:12px;border-radius:8px;color:var(--ink);font-weight:bold;cursor:pointer;">✅</button><button onclick="resolveRep('${r.id}','rejected')" style="flex:1;background:var(--err);border:none;padding:12px;border-radius:8px;color:#fff;font-weight:bold;cursor:pointer;">❌</button></div></div>`;
+        });
+    }catch(e){}
+}
+async function resolveRep(id,st){
+    try{
+        await fetch(`${API}/admin/reports/${id}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:st})});
+        openAdminPanel();
+    }catch(e){}
+}
+document.querySelector('.logo').addEventListener('dblclick',openAdminPanel);
+
+async function triggerSOS(){
+    if(!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(async pos=>{
+        try{
+            await fetch(`${API}/sos`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:me?me.id:'anon',lat:pos.coords.latitude,lon:pos.coords.longitude})});
+            alert("¡SOS ENVIADO!");
+        }catch(e){}
+    });
+}
+
+function startVoiceReport(){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){alert("No soportado");return;}
+    const rec=new SR();
+    rec.lang='es-MX';
+    rec.start();
+    rec.onresult=async(e)=>{
+        const txt=e.results[0][0].transcript;
+        if(txt.length<5) return;
+        navigator.geolocation.getCurrentPosition(async pos=>{
+            try{
+                await fetch(`${API}/reports`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:me?me.id:'anon',category:'sospechoso',description:`[VOZ]: ${txt}`,lat:pos.coords.latitude,lon:pos.coords.longitude})});
+                alert("Reporte voz: "+txt);
+            }catch(err){}
+        });
+    };
+}
+
+async function loadSafeHavens(){
+    try{
+        const res=await fetch(`${API}/places/safe-havens`);
+        const pl=await res.json();
+        const hIcon=L.divIcon({className:'',html:'<div style="font-size:24px;filter:drop-shadow(0 0 5px #00e676);">🏥</div>',iconSize:[24,24],iconAnchor:[12,12]});
+        pl.forEach(p=>{
+            L.marker([p.lat,p.lon],{icon:hIcon}).addTo(map).bindPopup(`<div style="padding:10px;text-align:center;"><h3 style="color:var(--ok);margin:0;">${p.name}</h3><p style="font-size:10px;margin:5px 0 0;">Refugio Seguro</p></div>`);
+        });
+        localStorage.setItem('zeta_havens',JSON.stringify(pl));
+    }catch(e){
+        const off=JSON.parse(localStorage.getItem('zeta_havens')||'[]');
+        const hIcon=L.divIcon({className:'',html:'<div style="font-size:24px;filter:drop-shadow(0 0 5px #00e676);">🏥</div>',iconSize:[24,24],iconAnchor:[12,12]});
+        off.forEach(p=>{L.marker([p.lat,p.lon],{icon:hIcon}).addTo(map);});
+    }
+}
+setTimeout(loadSafeHavens,3000);
+</script>
 </body>
 </html>
+
