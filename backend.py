@@ -1524,7 +1524,7 @@ def search_places():
                 params.append(f'%{place_type.lower()}%')
             sql += ' ORDER BY rating DESC, total_reviews DESC LIMIT 100'
             c.execute(sql, params)
-        else:
+    else:
             q = query.lower()
             sql = '''SELECT id,name,type,lat,lon,address,phone,description,rating,total_reviews,price_level,hours,tags
                      FROM places
