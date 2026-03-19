@@ -1537,7 +1537,7 @@ def search_places():
             c.execute(sql, params)
             places = []
         
-        for row in c.fetchall():
+    for row in c.fetchall():
             place = {
                 "id": row[0], "name": row[1], "type": row[2],
                 "coords": [row[3], row[4]], "lat": row[3], "lon": row[4],
