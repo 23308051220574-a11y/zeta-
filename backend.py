@@ -1555,8 +1555,7 @@ def search_places():
                     places.append(place)
             else:
                 places.append(place)
-
-        conn.close()
+                conn.close()
         return jsonify(places[:30])
 
     except Exception as e:
