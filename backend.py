@@ -1535,8 +1535,8 @@ def search_places():
                 params.append(f'%{place_type.lower()}%')
             sql += ' ORDER BY rating DESC, total_reviews DESC LIMIT 30'
             c.execute(sql, params)
-
-        places = []
+            places = []
+        
         for row in c.fetchall():
             place = {
                 "id": row[0], "name": row[1], "type": row[2],
