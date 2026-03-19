@@ -784,8 +784,15 @@ async function doReg() {
 }
 function skipReg() { me={id:`guest_${Date.now()}`,name:'Invitado',email:'',photo:'',reports_count:0}; localStorage.setItem('zu3',JSON.stringify(me)); hideEl('m-reg'); boot(); }
 
-function boot() { initMap(); getGPS(); loadZones(); loadReports(); loadPlaces(); startTips(); startTracking(); }
-
+function boot() { 
+  initMap(); 
+  getGPS(); 
+  loadZones(); 
+  loadReports(); 
+  cargarLugaresManuales();
+  startTips(); 
+  startTracking();
+}
 // ─── MAP ────────────────────────────────────────────
 function initMap() {
   if(map) return;
@@ -1393,6 +1400,93 @@ window.addEventListener('beforeunload',()=>{
   if(tipTimer) clearInterval(tipTimer);
 });
 console.log('%cZETA v2.1%c Táctica · Chihuahua','color:#00d4ff;font-weight:900;font-size:18px;font-family:monospace','color:#4a6480;font-size:11px');
+const lugaresManuales = [
+  { 
+    id: 1, nombre: "Catedral de Chihuahua", tipo: "Templo", 
+    latitud: 28.6368, longitud: -106.0766, 
+    foto: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Catedral_Chihuahua.jpg/800px-Catedral_Chihuahua.jpg", 
+    resena: "Una joya del barroco en el corazón de la ciudad. Perfecta para tomar fotos de noche." 
+  },
+  { 
+    id: 2, nombre: "Museo Histórico de la Revolución (Casa de Villa)", tipo: "Museo", 
+    latitud: 28.6254, longitud: -106.0718, 
+    foto: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Museo_Historico_de_la_Revolucion.jpg/800px-Museo_Historico_de_la_Revolucion.jpg", 
+    resena: "Un viaje increíble a la historia de México. Conserva los impactos de bala originales." 
+  },
+  { 
+    id: 3, nombre: "Parque El Palomar", tipo: "Parque", 
+    latitud: 28.6415, longitud: -106.0820, 
+    foto: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Palomar_Chihuahua.jpg/800px-Palomar_Chihuahua.jpg", 
+    resena: "Lugar súper tranquilo para caminar, pasear a las mascotas y ver el atardecer." 
+  },
+  { 
+    id: 4, nombre: "Fashion Mall Chihuahua", tipo: "Centro Comercial", 
+    latitud: 28.6288, longitud: -106.1150, 
+    foto: "https://lh3.googleusercontent.com/p/AF1QipMwBXXc7Y7lS12k4A_T-tVqjD8u-kG0mNkV2oA4=s680-w680-h510", 
+    resena: "La mejor plaza de la ciudad para compras, cine y pasar el rato con amigos." 
+  },
+
+  //  LUGARES EN CIUDAD JUÁREZ
+  { 
+    id: 5, nombre: "Monumento a la Mexicanidad (La X)", tipo: "Cultural", 
+    latitud: 31.7588, longitud: -106.4447, 
+    foto: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Monumento_a_la_Mexicanidad.jpg/800px-Monumento_a_la_Mexicanidad.jpg", 
+    resena: "El símbolo moderno de Juárez. La plaza es inmensa y hay eventos musicales muy seguido." 
+  },
+  { 
+    id: 6, nombre: "Espacio Interactivo La Rodadora", tipo: "Museo", 
+    latitud: 31.6506, longitud: -106.4357, 
+    foto: "https://lh3.googleusercontent.com/p/AF1QipN9zL_3V2f8zL_2xG5zL_2xG5zL_2xG5zL_2xG5=s680-w680-h510", 
+    resena: "El museo más divertido de la frontera, padrísimo para niños y adultos por igual." 
+  },
+  { 
+    id: 7, nombre: "Burritos Crisostomo", tipo: "Comida Típica", 
+    latitud: 31.7348, longitud: -106.4410, 
+    foto: "https://lh3.googleusercontent.com/p/AF1QipO9mE8n4wVwXz2Q1H3K2L1D3R9u0M8Q1M8Q1M8=s680-w680-h510", 
+    resena: "¡No puedes decir que fuiste a Juárez si no te comiste un burrito aquí! Riquísimos." 
+  },
+  { 
+    id: 8, nombre: "Parque Central Hermanos Escobar", tipo: "Parque", 
+    latitud: 31.6515, longitud: -106.4370, 
+    foto: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Parque_Central_Hermanos_Escobar.jpg/800px-Parque_Central_Hermanos_Escobar.jpg", 
+    resena: "Excelente para pasear en lancha, correr, y saludar a la jirafa Modesto (QEPD) en sus memorias." 
+  }
+];
+
+function cargarLugaresManuales() {
+  placeMarkers.forEach(m => map.removeLayer(m));
+  placeMarkers = [];
+
+  lugaresManuales.forEach(p => {
+    const emoji = PICONS[p.tipo] || '📍';
+    const icon = L.divIcon({
+      className: 'custom-place-icon',
+      html: `<div style="font-size: 26px; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">${emoji}</div>`,
+      iconSize: [30, 40],
+      iconAnchor: [15, 40],
+      popupAnchor: [0, -35]
+    });
+
+    const marker = L.marker([p.latitud, p.longitud], { icon: icon }).addTo(map);
+    const popupHtml = `
+      <div style="padding: 12px; background: var(--panel); border-radius: var(--rL); width: 220px;">
+        <h3 style="margin:0 0 4px 0; color: var(--cyan); font-family: var(--fT); font-size: 18px; letter-spacing: 1px;">${p.nombre}</h3>
+        <p style="margin: 0 0 10px 0; font-family: var(--fM); font-size: 10px; color: var(--gold); letter-spacing: 1px;">${emoji} ${p.tipo.toUpperCase()}</p>
+        
+        <div style="width: 100%; height: 120px; border-radius: 8px; overflow: hidden; margin-bottom: 10px; border: 1px solid var(--wire);">
+          <img src="${p.foto}" style="width: 100%; height: 100%; object-fit: cover;" alt="${p.nombre}">
+        </div>
+        
+        <p style="margin: 0; font-family: var(--fU); font-size: 11px; color: var(--paper); line-height: 1.4; font-style: italic;">
+          "${p.resena}"
+        </p>
+      </div>
+    `;
+    
+    marker.bindPopup(popupHtml);
+    placeMarkers.push(marker);
+  });
+}
 </script>
 </body>
 </html>
