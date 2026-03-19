@@ -1559,7 +1559,7 @@ def search_places():
                 
                 return jsonify(places[:30])
 
-    except exception as e:
+    except Exception as e:
         return jsonify({"status":"error","message":str(e)}), 500
 
 @app.route('/api/places/<place_id>', methods=['GET'])
