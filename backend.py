@@ -1,3 +1,4 @@
+import os
 import json, os, re, hashlib, math, sqlite3, base64
 from datetime import datetime, timedelta
 from flask import Flask, request, jsonify
@@ -2498,5 +2499,5 @@ def initialize_db():
     conn.close()
     
 if __name__ == '__main__':
-    initialize_db()
-    app.run(debug=True, port=5002)
+    puerto = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=puerto)
