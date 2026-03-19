@@ -1502,16 +1502,20 @@ def register():
 
 @app.route('/api/places/search', methods=['GET'])
 def search_places():
-    try:
-        query = request.args.get('q','').strip()
-        place_type = request.args.get('type', None)
-        lat = request.args.get('lat', None)
-        lon = request.args.get('lon', None)
-        radius = float(request.args.get('radius', 15))
-
-        conn = sqlite3.connect(DB_FILE)
-        c = conn.cursor()
-
+    query = request.args.get('q', '')
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM places WHERE name LIKE ? OR category LIKE ?", ('%'+query+'%', '%'+query+'%'))
+    places = c.fetchall()
+    conn.close()
+ 
+    return jsonify([{
+        'id': row[0],
+        'nombre': row[1],
+        'tipo': row[2],
+        'latitud': row[3],
+        'longitud': row[4]
+    } for row in places])
         if len(query) < 1:
             sql = 'SELECT id,name,type,lat,lon,address,phone,description,rating,total_reviews,price_level,hours,tags FROM places'
             params = []
@@ -1560,14 +1564,22 @@ def search_places():
 
 @app.route('/api/places/<place_id>', methods=['GET'])
 def get_place(place_id):
-    try:
-        conn = sqlite3.connect(DB_FILE)
-        c = conn.cursor()
-        c.execute('SELECT id,name,type,lat,lon,address,phone,website,description,rating,total_reviews,price_level,hours FROM places WHERE id=?', (place_id,))
-        row = c.fetchone()
-        if not row:
-            conn.close()
-            return jsonify({"status":"error","message":"Lugar no encontrado"}), 404
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM places WHERE id=?", (place_id,))
+    place = c.fetchone()
+    conn.close()
+    
+    if place:
+        return jsonify({
+            'id': place[0],
+            'nombre': place[1],   
+            'tipo': place[2],     
+            'latitud': place[3],  
+            'longitud': place[4]
+        })
+    return jsonify({'error': 'Lugar no encontrado'}), 404
 
         place = {"id":row[0],"name":row[1],"type":row[2],"coords":[row[3],row[4]],
                  "lat":row[3],"lon":row[4],"address":row[5],"phone":row[6],"website":row[7],
