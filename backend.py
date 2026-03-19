@@ -2483,6 +2483,31 @@ def health():
     except Exception as e:
         return jsonify({"status":"error","message":str(e)}), 500
 
+     @app.route('/api/seed', methods=['GET'])
+def seed_db():
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    
+    c.execute('''CREATE TABLE IF NOT EXISTS places (id INTEGER PRIMARY KEY, name TEXT, category TEXT, lat REAL, lon REAL)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS reports (id INTEGER PRIMARY KEY, description TEXT, lat REAL, lon REAL, status TEXT DEFAULT 'pendiente')''')
+    c.execute('DELETE FROM places')
+    
+    lugares = [
+        ("Hospital Central (CUU)", "hospital", 28.6330, -106.0754),
+        ("Refugio Sur (CUU)", "refugio", 28.6000, -106.0500),
+        ("Policía Municipal (CUU)", "policia", 28.6400, -106.0800),
+        
+        ("Hospital General (JRZ)", "hospital", 31.7386, -106.4314),
+        ("Refugio Frontera (JRZ)", "refugio", 31.6904, -106.4245),
+        ("Policía Distrito Sur (JRZ)", "policia", 31.6500, -106.4000)
+    ]
+    for lugar in lugares:
+        c.execute("INSERT INTO places (name, category, lat, lon) VALUES (?, ?, ?, ?)", lugar)
+        
+    conn.commit()
+    conn.close()
+    
+    return jsonify({"mensaje": "¡Magia hecha! Tablas creadas y lugares de Chihuahua y Juárez inyectados correctamente."})
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 5002))
