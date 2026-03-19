@@ -2492,10 +2492,11 @@ def seed_db():
 def initialize_db():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS places...''')
+    c.execute('''CREATE TABLE IF NOT EXISTS places (id INTEGER PRIMARY KEY, name TEXT, category TEXT, lat REAL, lon REAL)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS reports (id INTEGER PRIMARY KEY, description TEXT, lat REAL, lon REAL, status TEXT DEFAULT 'pendiente')''')
     conn.commit()
     conn.close()
-
+    
 if __name__ == '__main__':
     initialize_db()
     app.run(debug=True, port=5002)
