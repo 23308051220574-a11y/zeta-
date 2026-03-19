@@ -1516,7 +1516,7 @@ def search_places():
         'latitud': row[3],
         'longitud': row[4]
     } for row in places])
-        if len(query) < 1:
+    if len(query) < 1:
             sql = 'SELECT id,name,type,lat,lon,address,phone,description,rating,total_reviews,price_level,hours,tags FROM places'
             params = []
             if place_type:
