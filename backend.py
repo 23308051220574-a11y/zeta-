@@ -1332,6 +1332,10 @@ def health():
     except Exception as e:
         return jsonify({"status":"error","message":str(e)}), 500
 
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     print(f"\n🛡️  ZETA PRO {VERSION}")
