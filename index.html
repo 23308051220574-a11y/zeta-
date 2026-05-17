@@ -11,7 +11,6 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-/* ═══════ TEMA OSCURO (default) ═══════ */
 :root{
   --ink:#040810;--deep:#080f1c;--panel:#0c1526;--card:#101d30;
   --rim:rgba(0,212,255,.1);--wire:rgba(255,255,255,.06);--paper:#e8f4ff;--dim:#4a6480;
@@ -24,7 +23,6 @@
   --map-f:brightness(.8) saturate(1.2) hue-rotate(4deg);
   --topbg:linear-gradient(180deg,rgba(4,8,16,.97) 0%,transparent 100%);
 }
-/* ═══════ TEMA CLARO ═══════ */
 [data-theme="light"]{
   --ink:#f0f4f8;--deep:#e2eaf4;--panel:#ffffff;--card:#f5f8fc;
   --rim:rgba(0,100,200,.12);--wire:rgba(0,0,0,.08);--paper:#1a2332;--dim:#6b7f99;
@@ -51,17 +49,14 @@ html,body{font-family:var(--fU);background:var(--ink);color:var(--paper);overflo
 .leaflet-control-zoom a{background:var(--panel) !important;color:var(--paper) !important;border:1px solid var(--wire) !important}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.025) 3px,rgba(0,0,0,.025) 4px)}
 
-/* TOPBAR */
 #topbar{position:absolute;top:0;left:0;right:0;z-index:900;background:var(--topbg);padding:12px 13px 38px;display:flex;align-items:center;gap:7px;pointer-events:none;transition:background .4s}
 #topbar>*{pointer-events:auto}
 .logo-wrap{cursor:pointer;user-select:none;flex-shrink:0}
 .logo{font-family:var(--fT);font-size:27px;letter-spacing:5px;color:var(--cyan);text-shadow:0 0 20px rgba(0,212,255,.5);line-height:1}
 .logo-sub{font-family:var(--fM);font-size:8px;color:var(--dim);letter-spacing:2px;margin-top:-1px}
-/* City Toggle */
 #city-toggle{display:flex;background:var(--card);border:1px solid var(--wire);border-radius:18px;overflow:hidden;flex-shrink:0}
 .ct{padding:4px 8px;font-family:var(--fM);font-size:9px;letter-spacing:.5px;cursor:pointer;color:var(--dim);transition:var(--t)}
 .ct.on{background:var(--cyan);color:var(--ink);font-weight:700}
-/* Toolbar extras */
 #tb-ext{display:flex;align-items:center;gap:5px;margin-left:auto;flex-shrink:0}
 .tb-btn{background:var(--card);border:1px solid var(--wire);border-radius:16px;padding:4px 8px;font-size:13px;cursor:pointer;color:var(--dim);transition:var(--t);display:flex;align-items:center;gap:3px;font-family:var(--fM);font-size:9px}
 .tb-btn:hover{border-color:var(--cyan);color:var(--cyan)}
@@ -71,7 +66,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 #sos-btn{width:40px;height:40px;border-radius:50%;background:var(--err);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--fT);font-size:12px;color:#fff;letter-spacing:1px;animation:sosPulse 2.2s infinite;flex-shrink:0}
 @keyframes sosPulse{0%{box-shadow:0 0 0 0 rgba(255,59,92,.5)}70%{box-shadow:0 0 0 10px rgba(255,59,92,0)}100%{box-shadow:0 0 0 0 rgba(255,59,92,0)}}
 
-/* TIP BANNER */
 #tip-banner{position:absolute;top:0;left:0;right:0;z-index:1100;background:var(--panel);transform:translateY(-100%);transition:transform .5s cubic-bezier(.34,1.3,.64,1);box-shadow:0 4px 30px rgba(0,0,0,.7)}
 #tip-banner.show{transform:none}
 #tip-strip{height:3px}
@@ -83,7 +77,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .tip-prog-bar{height:100%;width:100%;transform-origin:left;animation:tipFade 7s linear forwards}
 @keyframes tipFade{to{transform:scaleX(0)}}
 
-/* AD BANNER (tipo Waze) */
 #ad-banner{position:absolute;bottom:90px;left:10px;right:66px;z-index:700;background:var(--panel);border:1px solid var(--rim);border-radius:var(--r);padding:9px 12px;display:none;align-items:center;gap:10px;box-shadow:var(--sh);backdrop-filter:blur(12px);animation:fadeI .4s}
 #ad-banner.vis{display:flex}
 .ad-ico{font-size:22px;flex-shrink:0}
@@ -94,7 +87,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .ad-cta{background:linear-gradient(135deg,var(--cyan),#0097b5);color:var(--ink);border:none;border-radius:7px;padding:5px 9px;font-weight:700;font-size:10px;cursor:pointer;flex-shrink:0}
 .ad-x{background:none;border:none;cursor:pointer;color:var(--dim);font-size:13px;padding:2px;flex-shrink:0}
 
-/* SEARCH PANEL */
 #sp{position:absolute;top:68px;left:12px;right:12px;z-index:800;background:rgba(8,15,28,.97);border:1px solid var(--rim);border-radius:var(--rXL);box-shadow:var(--shL),var(--glow);padding:16px;backdrop-filter:blur(24px);transition:transform .35s cubic-bezier(.4,0,.2,1),opacity .35s}
 #sp.hidden{transform:translateY(-120%);opacity:0;pointer-events:none}
 .sp-hdr{font-family:var(--fT);font-size:20px;letter-spacing:2px;color:var(--cyan);display:flex;align-items:center;gap:8px;margin-bottom:12px}
@@ -121,7 +113,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .cb-jua{background:rgba(255,171,0,.12);color:var(--warn)}
 .geo-tag{font-family:var(--fM);font-size:8px;color:var(--dim)}
 
-/* PLACE MARKERS — bonitos con fondo de color por tipo */
 .ppin{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid rgba(255,255,255,.22);box-shadow:0 3px 10px rgba(0,0,0,.55);cursor:pointer;transition:transform .2s}
 .ppin:hover{transform:scale(1.2)}
 .ppin-templo{background:linear-gradient(135deg,#7c3aed,#4c1d95)}
@@ -139,7 +130,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .ppin-sponsor{border-color:var(--gold);animation:goldG 2s infinite}
 @keyframes goldG{0%,100%{box-shadow:0 0 10px rgba(255,201,71,.4)}50%{box-shadow:0 0 20px rgba(255,201,71,.7)}}
 
-/* FILTER PANEL */
 #fp{position:absolute;right:74px;bottom:158px;z-index:800;background:var(--panel);border:1px solid var(--rim);border-radius:var(--rL);box-shadow:var(--shL);padding:16px;width:230px;transform:scale(.9) translateX(16px);opacity:0;pointer-events:none;transform-origin:right bottom;transition:transform .25s cubic-bezier(.34,1.4,.64,1),opacity .25s}
 #fp.open{transform:none;opacity:1;pointer-events:auto}
 .fp-ttl{font-family:var(--fT);font-size:15px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px}
@@ -153,7 +143,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .cA.on{background:rgba(230,126,34,.12);border-color:var(--zA);color:var(--zA)}
 .cV.on{background:rgba(0,184,148,.12);border-color:var(--zV);color:var(--zV)}
 
-/* FABs */
 .fabs{position:absolute;right:12px;bottom:96px;z-index:800;display:flex;flex-direction:column;gap:9px}
 .fab{width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--t);box-shadow:var(--sh);position:relative}
 .fab:hover{transform:scale(1.11) translateY(-2px);box-shadow:var(--shL)}
@@ -169,7 +158,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 #btn-voice:hover{border-color:var(--cyan);transform:scale(1.08)}
 #btn-voice.active{background:var(--err);border-color:var(--err);color:#fff;animation:sosPulse 1s infinite}
 
-/* AI PANEL (Canva-style) */
 #ai-panel{position:fixed;bottom:0;left:0;right:0;z-index:3000;background:var(--panel);border-top:1px solid var(--rim);border-radius:var(--rXL) var(--rXL) 0 0;box-shadow:0 -12px 48px rgba(0,0,0,.7);transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);max-height:82dvh;display:flex;flex-direction:column}
 #ai-panel.open{transform:none}
 .ai-handle{width:36px;height:4px;background:var(--wire);border-radius:10px;margin:11px auto 0}
@@ -199,12 +187,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 #ai-input::placeholder{color:var(--dim)}
 #ai-send{width:40px;height:40px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--cyan),var(--purple));border:none;cursor:pointer;color:var(--ink);font-size:16px;display:flex;align-items:center;justify-content:center;transition:var(--t)}
 #ai-send:hover{transform:scale(1.1)}
-/* FAB para abrir IA */
 #ai-fab{position:fixed;right:12px;bottom:96px;z-index:2999;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--purple),#4c1d95);border:none;cursor:pointer;color:#fff;font-size:21px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(124,58,237,.5);transition:var(--t);animation:aiPulse 3s ease-in-out infinite}
 @keyframes aiPulse{0%,100%{box-shadow:0 4px 20px rgba(124,58,237,.5)}50%{box-shadow:0 4px 32px rgba(124,58,237,.8)}}
 #ai-fab:hover{transform:scale(1.1) translateY(-2px)}
 
-/* LANGUAGE MODAL */
 .lang-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
 .lang-card{background:var(--card);border:1.5px solid var(--wire);border-radius:var(--r);padding:12px 8px;cursor:pointer;text-align:center;transition:var(--t)}
 .lang-card:hover,.lang-card.on{border-color:var(--cyan);background:rgba(0,212,255,.07)}
@@ -212,7 +198,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .lang-name{font-weight:700;font-size:12px}
 .lang-native{font-size:10px;color:var(--dim);margin-top:1px}
 
-/* BOTTOM SHEET */
 #bs{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,var(--panel),var(--deep));border-top:1px solid var(--rim);border-radius:var(--rXL) var(--rXL) 0 0;box-shadow:0 -10px 48px rgba(0,0,0,.7);z-index:900;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);max-height:80dvh;overflow-y:auto}
 #bs.open{transform:none}
 .bshandle{width:34px;height:4px;background:var(--wire);border-radius:10px;margin:11px auto 7px;cursor:pointer}
@@ -236,7 +221,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .wCRITICAL{background:rgba(255,59,92,.07);border-color:rgba(255,59,92,.3)}
 .wHIGH{background:rgba(192,57,43,.07);border-color:rgba(192,57,43,.25)}
 
-/* OVERLAYS */
 .ov{position:fixed;inset:0;background:rgba(2,5,12,.92);backdrop-filter:blur(20px);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeI .3s ease}
 @keyframes fadeI{from{opacity:0}to{opacity:1}}
 .modal{background:var(--panel);border:1px solid var(--rim);border-radius:var(--rXL);box-shadow:var(--shL);width:92%;max-width:476px;max-height:92dvh;overflow-y:auto;animation:riseUp .4s cubic-bezier(.34,1.4,.64,1)}
@@ -246,7 +230,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .mx{width:30px;height:30px;border-radius:50%;background:var(--card);border:1px solid var(--wire);cursor:pointer;color:var(--dim);font-size:15px;display:flex;align-items:center;justify-content:center;transition:var(--t)}
 .mbody{padding:18px 20px 24px}
 
-/* FORMS */
 .fg{margin-bottom:14px}
 .fl{display:block;font-family:var(--fM);font-size:10px;letter-spacing:1.2px;color:var(--dim);margin-bottom:6px;text-transform:uppercase}
 .fi,.fta,.fsel{width:100%;padding:11px 13px;background:var(--card);border:1.5px solid var(--wire);border-radius:var(--r);font-family:var(--fU);font-size:13px;color:var(--paper);transition:var(--t)}
@@ -257,7 +240,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .av-ring{width:100px;height:100px;border-radius:50%;border:2px dashed rgba(0,212,255,.28);display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--card);transition:var(--t);overflow:hidden;margin:0 auto}
 .av-ring img{width:100%;height:100%;object-fit:cover}
 
-/* WIZARD */
 .wsteps{display:flex;gap:5px;margin-bottom:16px}
 .ws{flex:1;height:3px;border-radius:3px;background:var(--wire);transition:var(--t)}
 .ws.done{background:var(--ok)}.ws.active{background:var(--cyan)}
@@ -279,7 +261,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .vfW{background:rgba(255,171,0,.07);border:1px solid rgba(255,171,0,.22);color:var(--warn)}
 .vfE{background:rgba(255,59,92,.07);border:1px solid rgba(255,59,92,.28);color:var(--err)}
 
-/* HISTORY */
 .ptabs{display:flex;gap:5px;margin-bottom:14px}
 .ptab{flex:1;padding:7px;background:var(--card);border:1.5px solid var(--wire);border-radius:var(--r);cursor:pointer;font-family:var(--fM);font-size:10px;color:var(--dim);transition:var(--t)}
 .ptab.on{background:rgba(0,212,255,.08);border-color:var(--cyan);color:var(--cyan)}
@@ -291,7 +272,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .bar-seg{width:100%;min-height:2px;border-radius:1px;transition:height .5s}
 .bar-lbl{font-family:var(--fM);font-size:7px;color:var(--dim);margin-top:3px;writing-mode:vertical-lr;transform:rotate(180deg);height:22px}
 
-/* MENU */
 .mi{display:flex;align-items:center;gap:11px;padding:12px 17px;cursor:pointer;transition:var(--t);border-bottom:1px solid var(--wire)}
 .mi:hover{background:var(--card);padding-left:21px}
 .mi:last-child{border:none}
@@ -306,7 +286,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .tLeg{background:rgba(0,230,118,.1);color:var(--ok);border:1px solid rgba(0,230,118,.28)}
 .premium-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;font-family:var(--fM);font-size:9px;font-weight:700;background:linear-gradient(135deg,#ffd700,#ff8c00);color:#1a1a1a}
 
-/* EMERGENCIAS */
 .emg-card{display:flex;align-items:center;gap:12px;padding:13px;background:var(--card);border-radius:var(--r);border:1px solid var(--wire);margin-bottom:7px;cursor:pointer;transition:var(--t)}
 .emg-card:hover{border-color:var(--err)}
 .emg-ic{font-size:28px;flex-shrink:0}
@@ -314,7 +293,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .emg-lbl{font-size:10px;color:var(--dim);margin-top:1px}
 .emg-call{margin-left:auto;background:var(--err);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-weight:700;font-size:11px;cursor:pointer;flex-shrink:0}
 
-/* ADMIN */
 .adm-tabs{display:flex;gap:0;border-bottom:1px solid var(--wire);margin-bottom:14px}
 .adm-tab{flex:1;padding:9px 5px;text-align:center;font-family:var(--fM);font-size:9px;cursor:pointer;color:var(--dim);border-bottom:2px solid transparent;margin-bottom:-1px;transition:var(--t)}
 .adm-tab.on{color:var(--cyan);border-bottom-color:var(--cyan)}
@@ -325,7 +303,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .rep-pend,.zreq-card{background:var(--card);border-radius:var(--r);border:1px solid var(--wire);padding:11px;margin-bottom:6px}
 .zreq-card{border-color:rgba(255,171,0,.25)}
 
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 17px;border-radius:var(--r);font-family:var(--fU);font-size:13px;font-weight:700;border:none;cursor:pointer;transition:var(--t)}
 .btn:active{transform:scale(.97)}
 .bC{background:linear-gradient(135deg,var(--cyan),#0097b5);color:var(--ink)}
@@ -340,19 +317,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 #srow span{cursor:pointer;color:var(--card);font-size:32px}
 #srow span.lit{color:var(--gold)}
 
-/* USER PIN */
 .upin{position:relative;width:48px;height:48px}
 .upin-pulse{position:absolute;inset:-4px;border-radius:50%;background:rgba(0,212,255,.38);animation:upinP 2.6s ease-out infinite}
 @keyframes upinP{0%{transform:scale(.85);opacity:.9}100%{transform:scale(3);opacity:0}}
 .upin-av{width:48px;height:48px;border-radius:50%;border:3px solid var(--cyan);box-shadow:var(--glow);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;font-size:20px;background-color:var(--deep)}
 
-/* ZONE OVERLAY */
 #zone-overlay{position:fixed;inset:0;z-index:7000;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(2,5,12,.95);backdrop-filter:blur(20px);text-align:center;padding:30px}
 #zone-overlay.show{display:flex;animation:fadeI .4s ease}
 .zo-ring{position:absolute;width:280px;height:280px;border-radius:50%;animation:zoRing 1.5s ease-out infinite;opacity:0}
 @keyframes zoRing{0%{transform:scale(.7);opacity:.5}100%{transform:scale(2);opacity:0}}
 
-/* LOADING + TOAST */
 #ld{position:fixed;inset:0;background:rgba(2,5,12,.88);backdrop-filter:blur(14px);z-index:9000;display:none;align-items:center;justify-content:center}
 #ld.show{display:flex}
 .ld-box{background:var(--panel);border:1px solid var(--rim);border-radius:var(--rL);padding:24px 30px;display:flex;align-items:center;gap:14px;box-shadow:var(--shL)}
@@ -370,19 +344,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 
 <div id="map"></div>
 
-<!-- TOPBAR (añade city-toggle + botones tema/idioma) -->
 <div id="topbar">
   <div class="logo-wrap" onclick="logoTap()">
     <div class="logo">ZETA</div>
     <div class="logo-sub" id="logo-sub-txt">NAVEGACIÓN TÁCTICA</div>
   </div>
-  <!-- Toggle ciudad -->
   <div id="city-toggle">
     <div class="ct on" data-c="both"       onclick="setCity(this)">AMBAS</div>
     <div class="ct"    data-c="chihuahua"  onclick="setCity(this)">CHI</div>
     <div class="ct"    data-c="juarez"     onclick="setCity(this)">JUA</div>
   </div>
-  <!-- Extras: tema + idioma -->
   <div id="tb-ext">
     <button class="tb-btn" onclick="toggleTheme()" id="theme-btn" title="Tema">🌙</button>
     <button class="tb-btn" onclick="showEl('m-lang')" title="Idioma">🌐</button>
@@ -392,7 +363,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   <button id="sos-btn" onclick="triggerSOS()">SOS</button>
 </div>
 
-<!-- TIP BANNER -->
 <div id="tip-banner">
   <div id="tip-strip"></div>
   <div class="tip-body">
@@ -403,7 +373,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   <div class="tip-prog"><div class="tip-prog-bar" id="tpb"></div></div>
 </div>
 
-<!-- AD BANNER (tipo Waze) -->
 <div id="ad-banner">
   <span class="ad-ico" id="ad-ico">📍</span>
   <div class="ad-body">
@@ -415,7 +384,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   <button class="ad-x" onclick="document.getElementById('ad-banner').classList.remove('vis')">✕</button>
 </div>
 
-<!-- ZONE OVERLAY -->
 <div id="zone-overlay">
   <div class="zo-ring" style="border:2px solid rgba(192,57,43,.4)"></div>
   <div class="zo-ring" style="border:2px solid rgba(192,57,43,.2);animation-delay:.5s"></div>
@@ -428,7 +396,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </div>
 </div>
 
-<!-- AI PANEL (Canva-style) -->
 <div id="ai-panel">
   <div class="ai-handle"></div>
   <div class="ai-hdr">
@@ -439,20 +406,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
     </div>
     <button id="ai-close" onclick="closeAI()">✕</button>
   </div>
-  <!-- Quick chips -->
   <div class="ai-quick" id="ai-quick"></div>
-  <!-- Messages -->
   <div id="ai-msgs"></div>
-  <!-- Input -->
   <div class="ai-input-row">
     <input id="ai-input" type="text" placeholder="Pregunta sobre zonas, rutas o seguridad..." onkeydown="if(event.key==='Enter')sendAI()">
     <button id="ai-send" onclick="sendAI()">➤</button>
   </div>
 </div>
-<!-- FAB para abrir IA (se oculta cuando está abierto) -->
 <button id="ai-fab" onclick="openAI()" title="ZETA IA">✨</button>
 
-<!-- SEARCH PANEL -->
 <div id="sp" class="hidden">
   <div class="sp-hdr">
     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
@@ -470,7 +432,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   <button onclick="calcRoute()" class="btn bC bF bL" style="margin-top:7px">→ <span data-i18n="calc_route">CALCULAR RUTA SEGURA</span></button>
 </div>
 
-<!-- FILTER PANEL -->
 <div id="fp">
   <div class="fp-ttl" data-i18n="filters">FILTROS</div>
   <div class="fs"><div class="fs-lbl" data-i18n="zone">ZONA DE RIESGO</div>
@@ -500,7 +461,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   <button onclick="applyFilters();$('fp').classList.remove('open')" class="btn bC bF" style="font-size:11px" data-i18n="apply">APLICAR FILTROS</button>
 </div>
 
-<!-- FABs -->
 <div class="fabs">
   <button class="fab fRoute" onclick="toggleSearch()" title="Ruta">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
@@ -526,7 +486,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </button>
 </div>
 
-<!-- BOTTOM SHEET (RUTA) -->
 <div id="bs">
   <div class="bshandle" onclick="closeBs()"></div>
   <div class="bs-body">
@@ -540,9 +499,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </div>
 </div>
 
-<!-- ═══════════════════ MODALS ═══════════════════ -->
-
-<!-- TÉRMINOS -->
 <div id="m-terms" class="ov" style="display:none">
   <div class="modal" style="padding:34px;text-align:center">
     <div style="width:80px;height:80px;background:linear-gradient(135deg,var(--cyan),#0097b5);border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;box-shadow:var(--glow)"><span style="font-size:38px">🛡️</span></div>
@@ -562,7 +518,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </div>
 </div>
 
-<!-- REGISTRO -->
 <div id="m-reg" class="ov" style="display:none">
   <div class="modal">
     <div class="mhdr"><div class="mtitle" data-i18n="register">REGISTRO</div></div>
@@ -581,7 +536,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </div>
 </div>
 
-<!-- REPORTE (4 PASOS) -->
 <div id="m-rep" class="ov" style="display:none">
   <div class="modal">
     <div class="mhdr"><div class="mtitle" data-i18n="report">REPORTAR</div><button class="mx" onclick="hideEl('m-rep')">✕</button></div>
@@ -608,7 +562,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
             <div class="sv svH" onclick="setSev('high',this)"><div class="sv-ic">🔴</div><div class="sv-tx" style="color:var(--err)" data-i18n="high">Alto</div></div>
           </div>
         </div>
-        <!-- También solicitar zona -->
         <div style="background:rgba(255,171,0,.07);border:1px solid rgba(255,171,0,.22);border-radius:var(--r);padding:10px;margin-bottom:10px">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
             <input type="checkbox" id="also-zone-req" style="accent-color:var(--warn)">
@@ -664,7 +617,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </div>
 </div>
 
-<!-- SOLICITAR ZONA DE RIESGO -->
 <div id="m-zone-req" class="ov" style="display:none">
   <div class="modal">
     <div class="mhdr"><div class="mtitle" style="color:var(--warn)">🗺️ SOLICITAR ZONA</div><button class="mx" onclick="hideEl('m-zone-req')">✕</button></div>
@@ -696,7 +648,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </div>
 </div>
 
-<!-- MENÚ -->
 <div id="m-menu" class="ov" style="display:none">
   <div class="modal">
     <div style="background:linear-gradient(160deg,#060d1a,#0d1e35);padding:26px;text-align:center;border-bottom:1px solid var(--wire)">
@@ -731,7 +682,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </div>
 </div>
 
-<!-- HISTORIAL -->
 <div id="m-hist" class="ov" style="display:none">
   <div class="modal">
     <div class="mhdr"><div class="mtitle" data-i18n="history">HISTORIAL</div><button class="mx" onclick="hideEl('m-hist')">✕</button></div>
@@ -765,7 +715,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </div>
 </div>
 
-<!-- CONSEJOS -->
 <div id="m-tips" class="ov" style="display:none">
   <div class="modal">
     <div class="mhdr"><div class="mtitle" data-i18n="tips">CONSEJOS</div><button class="mx" onclick="hideEl('m-tips')">✕</button></div>
@@ -777,7 +726,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </div>
 </div>
 
-<!-- EMERGENCIAS -->
 <div id="m-emg" class="ov" style="display:none">
   <div class="modal">
     <div class="mhdr"><div class="mtitle" style="color:var(--err)">🚨 <span data-i18n="emergency">EMERGENCIAS</span></div><button class="mx" onclick="hideEl('m-emg')">✕</button></div>
@@ -799,7 +747,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </div>
 </div>
 
-<!-- RESEÑA -->
 <div id="m-rev" class="ov" style="display:none">
   <div class="modal">
     <div class="mhdr"><div class="mtitle" data-i18n="review">RESEÑA</div><button class="mx" onclick="hideEl('m-rev')">✕</button></div>
@@ -825,7 +772,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
   </div>
 </div>
 
-<!-- PREMIUM -->
 <div id="m-premium" class="ov" style="display:none">
   <div class="modal">
     <div style="background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,140,0,.07));padding:24px;text-align:center;border-radius:var(--rXL) var(--rXL) 0 0;border-bottom:1px solid rgba(255,215,0,.18)">
@@ -853,8 +799,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
     </div>
   </div>
 </div>
-
-<!-- IDIOMA -->
 <div id="m-lang" class="ov" style="display:none">
   <div class="modal">
     <div class="mhdr"><div class="mtitle">🌐 IDIOMA</div><button class="mx" onclick="hideEl('m-lang')">✕</button></div>
@@ -872,8 +816,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
     </div>
   </div>
 </div>
-
-<!-- ADMIN PIN -->
 <div id="m-admin-pin" class="ov" style="display:none">
   <div class="modal" style="padding:32px;text-align:center">
     <div style="font-size:40px;margin-bottom:14px">🔐</div>
@@ -883,8 +825,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
     <button onclick="hideEl('m-admin-pin')" class="btn bD bF" data-i18n="cancel">CANCELAR</button>
   </div>
 </div>
-
-<!-- ADMIN DASHBOARD -->
 <div id="m-admin" class="ov" style="display:none">
   <div class="modal">
     <div class="mhdr" style="background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(76,29,149,.1));padding-bottom:14px;border-radius:var(--rXL) var(--rXL) 0 0">
@@ -899,17 +839,14 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
         <div class="adm-tab" onclick="adminTab(this,'adm-stats')">📊 STATS</div>
         <div class="adm-tab" onclick="adminTab(this,'adm-bc')">📢 BC</div>
       </div>
-      <!-- Reportes pendientes -->
       <div id="adm-reports" class="adm-pane show">
         <p style="font-family:var(--fM);font-size:9px;color:var(--dim);margin-bottom:10px">REPORTES PENDIENTES</p>
         <div id="adm-reports-list"><div style="text-align:center;padding:20px;color:var(--dim)">Cargando...</div></div>
       </div>
-      <!-- Solicitudes de zona (nuevas) -->
       <div id="adm-zreqs" class="adm-pane">
         <p style="font-family:var(--fM);font-size:9px;color:var(--warn);margin-bottom:10px">SOLICITUDES DE ZONA PENDIENTES</p>
         <div id="adm-zreqs-list"><div style="text-align:center;padding:20px;color:var(--dim)">Cargando...</div></div>
       </div>
-      <!-- Añadir zona manual -->
       <div id="adm-add-zone" class="adm-pane">
         <p style="font-family:var(--fM);font-size:9px;color:var(--dim);margin-bottom:10px">AGREGAR ZONA MANUAL</p>
         <div class="fg"><label class="fl">Nombre</label><input id="az-name" type="text" class="fi" placeholder="Zona de Riesgo – Col. X"></div>
@@ -927,7 +864,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
         <div class="fg"><label class="fl">Descripción</label><input id="az-desc" type="text" class="fi" placeholder="Descripción..."></div>
         <button onclick="adminAddZone()" class="btn bPurple bF">+ CREAR ZONA</button>
       </div>
-      <!-- Stats -->
       <div id="adm-stats" class="adm-pane">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
           <div class="adm-stat"><div class="adm-stat-n" id="ast-users">--</div><div class="adm-stat-l">USUARIOS</div></div>
@@ -938,7 +874,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
           <div class="adm-stat"><div class="adm-stat-n" id="ast-ai">--</div><div class="adm-stat-l">IA CONFIG</div></div>
         </div>
       </div>
-      <!-- Broadcast -->
       <div id="adm-bc" class="adm-pane">
         <p style="font-family:var(--fM);font-size:9px;color:var(--dim);margin-bottom:13px">ALERTA A TODOS LOS USUARIOS</p>
         <div class="fg"><label class="fl">Título</label><input id="bc-title" type="text" class="fi" value="🚨 ALERTA DE SEGURIDAD"></div>
@@ -948,18 +883,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
     </div>
   </div>
 </div>
-
-<!-- LOADING + TOAST -->
 <div id="ld"><div class="ld-box"><div class="spin"></div><div><div id="ldmsg" style="font-weight:700;font-size:13px">Cargando...</div><div style="font-family:var(--fM);font-size:9px;color:var(--dim);margin-top:2px">SISTEMA ZETA</div></div></div></div>
 <div id="toastEl" class="toast"></div>
 
 <script>
 let curLang = localStorage.getItem('zeta_lang') || 'es';
-
-/* ═══════════════════════════════════════════════
-   ZETA PRO v2.2 — Internacionalización (i18n)
-   Idiomas: es, en, fr, de, pt, zh
-   ═══════════════════════════════════════════════ */
 
 const LANGS = {
   es: {
@@ -1186,12 +1114,9 @@ function applyLang() {
       el.placeholder = LANGS[curLang][key];
     }
   });
-  // Update HTML lang attribute
   document.documentElement.lang = curLang;
-  // Update logo sub if exists
   const sub = document.getElementById('logo-sub-txt');
   if (sub) sub.textContent = t('logo_sub');
-  // Update AI quick buttons
   refreshAIQuickButtons();
 }
 
@@ -1199,16 +1124,12 @@ function setLang(code, el) {
   curLang = code;
   localStorage.setItem('zeta_lang', code);
   applyLang();
-  // Update active card
   document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('on'));
   if (el) el.classList.add('on');
-  // Update sub in menu
   const sub = document.getElementById('cur-lang-sub');
   if (sub && LANGS[code]) sub.textContent = LANGS[code].name;
-  // Close modal
   const lm = document.getElementById('lang-modal');
   if (lm) lm.style.display = 'none';
-  // Save to backend if user exists
   const me = JSON.parse(localStorage.getItem('zu3') || 'null');
   if (me && !me.id.startsWith('guest_')) {
     fetch(`${window.ZETA_API || ''}/api/user/preferences`, {
@@ -1224,21 +1145,14 @@ function refreshAIQuickButtons() {
   if (!container) return;
   const questions = [t('ai_q1'), t('ai_q2'), t('ai_q3'), t('ai_q4')];
   container.innerHTML = questions.map(q =>
-    `<button class="ai-q" onclick="sendAIMsg('${q.replace(/'/g,"&#39;")}')">${q}</button>`
+    `<div class="ai-qchip" onclick="sendAIMsg('${q.replace(/'/g,"&#39;")}')">${q}</div>`
   ).join('');
 }
 
-/* ═══════════════════════════════════════════════
-   ZETA PRO v2.2 — app.js
-   Lógica principal del frontend
-   ═══════════════════════════════════════════════ */
-
-const API = window.ZETA_API || '';  // vacío = mismo servidor (Flask sirve el index)
+const API = window.ZETA_API || '';  
 const CTR_CHI = [28.6353, -106.0886];
 const CTR_JUA = [31.7380, -106.4870];
 const GEO     = { enableHighAccuracy:true, timeout:15000, maximumAge:5000 };
-
-// ── ESTADO GLOBAL ──────────────────────────────
 let map, routeLayer, userMarker, watchId, trackTimer, tipTimer, adTimer;
 let me = null, gps = null, oriC = null, dstC = null;
 let routeData = null, curSev = 'medium', curStep = 1;
@@ -1252,7 +1166,6 @@ let filters = { zones:['negro','rojo','amarillo','verde'], cats:['crime','robber
 let aiMessages = [], aiTyping = false;
 let curAdId = null;
 
-// ── LUGARES LOCALES (fallback si API no responde) ──
 const PLACES_LOCAL = [
   // Chihuahua
   {id:"p001",name:"Catedral Metropolitana",type:"Templo/Cultura",lat:28.6358,lon:-106.0773,address:"Plaza de Armas S/N",phone:"+52 614 410 3858",rating:4.8,total_reviews:2847,hours:"Lun-Dom 7:00-20:00",city:"chihuahua"},
@@ -1305,7 +1218,6 @@ const PLACES_LOCAL = [
   {id:"j039",name:"Aeropuerto Internacional Juárez",type:"Transporte",lat:31.6363,lon:-106.4287,address:"Carretera Panamericana km 11",phone:"+52 656 775 3000",rating:4.2,total_reviews:6789,hours:"4:00-23:00",city:"juarez"},
 ];
 
-// ── UTILS ──────────────────────────────────────
 const $ = id => document.getElementById(id);
 const showEl = id => { const e = $(id); if(e) e.style.display = 'flex'; };
 const hideEl = id => { const e = $(id); if(e) e.style.display = 'none'; };
@@ -1340,8 +1252,6 @@ const PICONS = {
   'Gasolinera':'⛽','Monumento':'🏛️','Plaza':'🏙️','Mercado':'🏪',
 };
 const pico = t => { if(!t) return '📍'; for(const k of Object.keys(PICONS)) { if(t.includes(k)) return PICONS[k]; } return '📍'; };
-
-// ── BOOT ───────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   const rd = $('rdesc');
   if(rd) rd.addEventListener('input', function() { $('rcc').textContent = `${this.value.length}/1000`; });
@@ -1361,7 +1271,7 @@ async function doReg() {
   if(!e.includes('@')) return toast('Email inválido','var(--err)','❌');
   showLoad('Registrando...');
   try {
-    const r = await fetch(`${API}/api/auth/register`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name:n,email:e,phone:p,photo:regPhoto,language:currentLang}) });
+    const r = await fetch(`${API}/api/auth/register`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name:n,email:e,phone:p,photo:regPhoto,language:curLang}) });
     const d = await r.json(); hideLoad();
     if(d.status === 'success') { me = d.user; localStorage.setItem('zu3', JSON.stringify(me)); hideEl('m-reg'); boot(); toast(`¡Bienvenido, ${me.name.split(' ')[0]}!`,'var(--ok)','🛡️'); }
     else toast(d.message || 'Error','var(--err)','❌');
@@ -1387,7 +1297,6 @@ function boot() {
   initAI();
 }
 
-// ── THEME ──────────────────────────────────────
 function checkTheme() {
   const saved = localStorage.getItem('zeta_theme') || 'dark';
   applyTheme(saved);
@@ -1416,11 +1325,10 @@ function applyTheme(theme) {
   if(map) setTimeout(() => map.invalidateSize(), 100);
 }
 
-// ── CITY TOGGLE ────────────────────────────────
 function setCity(el) {
   document.querySelectorAll('.ct').forEach(c => c.classList.remove('on'));
   el.classList.add('on');
-  curCity = el.dataset.city;
+  curCity = el.dataset.c;
   if(curCity === 'chihuahua') map.flyTo(CTR_CHI, 13, {duration:1.2});
   else if(curCity === 'juarez') map.flyTo(CTR_JUA, 13, {duration:1.2});
   else map.flyToBounds([[28.0,-107.5],[32.0,-105.5]], {padding:[30,30],duration:1.2});
@@ -1433,7 +1341,6 @@ function setCity(el) {
   });
 }
 
-// ── MAP ────────────────────────────────────────
 function initMap() {
   if(map) return;
   map = L.map('map', {zoomControl:false}).setView([30.0,-106.3], 8);
@@ -1457,8 +1364,6 @@ function toggle3D() {
 }
 function toggleSearch() { $('sp').classList.toggle('hidden'); }
 function centerMe() { if(gps) map.flyTo([gps.lat,gps.lon], 16, {duration:1.4}); else getGPS(); }
-
-// ── GPS ────────────────────────────────────────
 function getGPS() {
   if(!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(onGPS, onGPSErr, GEO);
@@ -1473,13 +1378,12 @@ async function onGPS(pos) {
     if(d.status === 'success') { $('ori').value = d.address; $('ori').placeholder = d.address; }
   } catch { $('ori').placeholder = 'Mi ubicación'; }
   checkZone();
-  // Auto-detect city
   if(gps.lat > 30) {
     document.querySelectorAll('.ct').forEach(c => c.classList.remove('on'));
-    $('ct-jua').classList.add('on'); curCity = 'juarez';
+    document.querySelector('[data-c="juarez"]')?.classList.add('on'); curCity = 'juarez';
   } else {
     document.querySelectorAll('.ct').forEach(c => c.classList.remove('on'));
-    $('ct-chi').classList.add('on'); curCity = 'chihuahua';
+    document.querySelector('[data-c="chihuahua"]')?.classList.add('on'); curCity = 'chihuahua';
   }
   watchId = navigator.geolocation.watchPosition(p => { gps = {lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy}; updatePin(); }, ()=>{}, GEO);
 }
@@ -1494,7 +1398,6 @@ function updatePin() {
     .bindPopup(`<div style="padding:12px;text-align:center"><p style="font-weight:800;font-size:13px">${me?.name||'Tú'}</p><p style="font-family:var(--fM);font-size:9px;color:var(--dim)">GPS ±${~~(gps.acc||0)}m</p></div>`);
 }
 
-// ── ZONE CHECK ─────────────────────────────────
 async function checkZone() {
   if(!gps) return;
   try {
@@ -1510,13 +1413,12 @@ async function checkZone() {
       $('zo-level').textContent = LBLS[lv]; $('zo-level').style.color = COLS[lv];
       $('zo-name').textContent = zname;
       $('zo-msg').textContent = lv === 'negro' ? t('zone_msg_negro') : t('zone_msg_rojo');
-      showEl('zo'); setTimeout(() => hideEl('zo'), 13000);
+      showEl('zone-overlay'); setTimeout(() => hideEl('zone-overlay'), 13000);
     }
     lastZone = lv;
   } catch(e) { console.warn('checkZone:', e.message); }
 }
 
-// ── PLACES ─────────────────────────────────────
 function loadAllPlaces() {
   const count = renderPlaces(PLACES_LOCAL);
   console.log(`✅ ${count} lugares cargados`);
@@ -1630,7 +1532,6 @@ function goToPlace(lat, lon, name) {
   setTimeout(calcRoute, 400);
 }
 
-// ── ZONES ──────────────────────────────────────
 async function loadZones() {
   try {
     const r = await fetch(`${API}/api/zones/risk`); const d = await r.json();
@@ -1657,7 +1558,6 @@ async function loadZones() {
   } catch(e) { console.warn('Zonas:', e.message); }
 }
 
-// ── REPORTS ────────────────────────────────────
 async function loadReports() {
   try {
     const r = await fetch(`${API}/api/reports/list?verified=true&days=30`); const d = await r.json();
@@ -1694,7 +1594,6 @@ async function voteRep(id, type) {
   } catch { toast('Error','var(--err)','❌'); }
 }
 
-// ── SEARCH (con geocoding libre) ───────────────
 let suggestTimer = null;
 
 function preSug(boxId, isDst) {
@@ -1715,7 +1614,6 @@ function searchLoc(input, boxId) {
 
   suggestTimer = setTimeout(async () => {
     const box = $(boxId);
-    // 1. Search local places first
     const local = PLACES_LOCAL.filter(p => {
       const match = p.name.toLowerCase().includes(q) || (p.address||'').toLowerCase().includes(q) || (p.type||'').toLowerCase().includes(q);
       const cityOk = curCity === 'both' || p.city === curCity;
@@ -1723,8 +1621,6 @@ function searchLoc(input, boxId) {
     });
     let html = '';
     if(local.length) html += `<div class="sc">📍 LUGARES (${local.length})</div>${local.map(p => sRow(p, boxId==='dsug')).join('')}`;
-
-    // 2. Free geocoding (Nominatim via backend)
     try {
       const r = await fetch(`${API}/api/geocode/forward?q=${encodeURIComponent(q)}`);
       const d = await r.json();
@@ -1759,8 +1655,6 @@ function selDst(el) { const p = parseP(el); if(p.name) { $('dst').value = p.name
 function parseP(el) { try { return JSON.parse(el.dataset.p.replace(/&#39;/g,"'")); } catch { return {}; } }
 function useGPS() { if(gps) { $('ori').value = 'Mi ubicación GPS'; oriC = [gps.lat,gps.lon]; $('osug').classList.remove('open'); } else getGPS(); }
 document.addEventListener('click', e => { if(!e.target.closest('.iw') && !e.target.closest('.sug')) document.querySelectorAll('.sug').forEach(s => s.classList.remove('open')); });
-
-// ── ROUTE ──────────────────────────────────────
 async function calcRoute() {
   if(!$('dst').value.trim()) return toast('Ingresa un destino','var(--warn)','⚠️');
   const oriStr = oriC ? `${oriC[0]},${oriC[1]}` : (gps ? `${gps.lat},${gps.lon}` : $('ori').value);
@@ -1796,9 +1690,8 @@ function showBs(d) {
   $('bsc').innerHTML = (d.transport_options||[]).map((o,i) =>
     `<div class="tc ${i===0?'on':''}" onclick="selT(this,'${o.time}')"><div class="tc-ic">${o.icon||'🚗'}</div><div class="tc-md">${o.mode}</div><div class="tc-tm">${o.time}</div><div class="tc-ds">${o.distance||''}</div></div>`
   ).join('');
-  // Routing mode badge
-  const mb = $('routing-mode-badge');
-  if(mb) mb.innerHTML = d.routing_mode === 'osrm'
+  const mb = $('bsm');
+  if(mb && d.routing_mode) mb.innerHTML += d.routing_mode === 'osrm'
     ? '<span class="routing-badge rb-osrm">✓ Ruta real OSRM</span>'
     : '<span class="routing-badge rb-straight">~ Estimación lineal</span>';
   $('bs').classList.add('open');
@@ -1807,8 +1700,6 @@ function selT(el, time) { document.querySelectorAll('.tc').forEach(c => c.classL
 function closeBs() { $('bs').classList.remove('open'); }
 function startTrip() { if(!routeData) return; toast('¡Viaje iniciado!','var(--ok)','🚀'); closeBs(); }
 function clearRoute() { if(routeLayer) map.removeLayer(routeLayer); $('ori').value=''; $('dst').value=''; oriC=null; dstC=null; routeData=null; closeBs(); }
-
-// ── REPORT WIZARD ──────────────────────────────
 function initReport() {
   curStep=1; curSev='medium'; repPhotos=[];
   ['1','2','3','4'].forEach((i,idx) => { const w=$(`ws${i}`); const p=$(`wp${i}`); if(w) w.classList.toggle('show',idx===0); if(p) p.className='ws'+(idx===0?' active':''); });
@@ -1817,7 +1708,6 @@ function initReport() {
   ['photo-flags','loc-flags'].forEach(id => { const e=$(id); if(e) e.innerHTML=''; });
   document.querySelectorAll('.sv').forEach(b => b.classList.remove('on')); document.querySelector('.svM')?.classList.add('on');
   if(gps) { const rl=$('rloc-txt'); if(rl) rl.textContent=`${gps.lat.toFixed(5)}, ${gps.lon.toFixed(5)}`; }
-  // Zone req checkbox
   const cb=$('also-zone-req'); if(cb) cb.checked=false;
 }
 function setSev(s, el) { curSev=s; document.querySelectorAll('.sv').forEach(b => b.classList.remove('on')); el.classList.add('on'); }
@@ -1867,7 +1757,6 @@ async function submitReport() {
     const d=await r.json(); hideLoad();
     if(d.status==='success') {
       toast(`Reporte enviado ✓`,'var(--ok)','✅'); hideEl('m-rep'); loadReports();
-      // Also submit zone request if checked
       if($('also-zone-req')?.checked) {
         hideEl('m-rep');
         $('zr-name').value = `Zona de riesgo – ${$('rcat')?.options[$('rcat')?.selectedIndex]?.text||'Incidente'}`;
@@ -1880,7 +1769,6 @@ async function submitReport() {
   } catch { hideLoad(); toast('Sin conexión','var(--err)','⚠️'); }
 }
 
-// ── ZONE REQUEST ───────────────────────────────
 let zrPhotoFiles = [];
 function prevZrPh(e) {
   const files=Array.from(e.target.files).slice(0,3); zrPhotos=[];
@@ -1901,7 +1789,6 @@ async function submitZoneReq() {
   } catch { hideLoad(); toast('Sin conexión','var(--err)','⚠️'); }
 }
 
-// ── TIPS ───────────────────────────────────────
 let tipTO = null;
 function startTips() { fetchTip(); tipTimer=setInterval(fetchTip, 32000); }
 async function fetchTip() {
@@ -1935,7 +1822,6 @@ function showTipBanner(tip) {
 }
 function hideTip() { $('tip-banner')?.classList.remove('show'); if(tipTO) clearTimeout(tipTO); }
 
-// ── ADS ────────────────────────────────────────
 async function loadAd() {
   // Premium users don't see ads
   if(me?.is_premium) return;
@@ -1946,12 +1832,12 @@ async function loadAd() {
     if(!d.ad) return;
     const ad=d.ad; curAdId=ad.id;
     const banner=$('ad-banner'); if(!banner) return;
-    $('ad-icon').textContent=ad.icon||'📍';
-    $('ad-title').textContent=ad.title;
+    $('ad-ico').textContent=ad.icon||'📍';
+    $('ad-ttl').textContent=ad.title;
     $('ad-sub').textContent=ad.body;
     const cta=$('ad-cta'); if(cta) { cta.textContent=ad.cta||'Ver más'; }
-    banner.classList.remove('hidden');
-    adTimer=setTimeout(() => banner.classList.add('hidden'), 20000);
+    banner.classList.add('vis');
+    adTimer=setTimeout(() => banner.classList.remove('vis'), 20000);
   } catch {}
 }
 function adClick() {
@@ -1962,7 +1848,6 @@ function adClick() {
   toast('Redirigiendo...','var(--cyan)','📍');
 }
 
-// ── SOS ────────────────────────────────────────
 function triggerSOS() {
   if(!confirm('⚠️ EMERGENCIA\n\n¿Confirmas activar SOS?\n\nSe abrirá el marcador del 911.')) return;
   toast('SOS activado — Llamando 911...','var(--err)','🆘');
@@ -1970,7 +1855,6 @@ function triggerSOS() {
   setTimeout(() => window.location.href='tel:911', 1500);
 }
 
-// ── TRACKING ───────────────────────────────────
 function startTracking() {
   trackTimer = setInterval(() => {
     if(gps && me && !me.id.startsWith('guest_')) {
@@ -1980,7 +1864,6 @@ function startTracking() {
   }, 30000);
 }
 
-// ── FILTERS ────────────────────────────────────
 function toggleChip(el) { el.classList.toggle('on'); }
 function applyFilters() {
   filters.zones = Array.from(document.querySelectorAll('[data-zone].on')).map(c => c.dataset.zone);
@@ -1989,7 +1872,6 @@ function applyFilters() {
   toast('Filtros aplicados','var(--cyan)','🔍');
 }
 
-// ── AI ASSISTANT ───────────────────────────────
 function initAI() {
   aiMessages = [];
   const welcome = t('ai_welcome');
@@ -1999,16 +1881,23 @@ function initAI() {
 
 function openAI() {
   $('ai-panel').classList.add('open');
+  const fab=$('ai-fab'); if(fab) fab.style.display='none';
   setTimeout(() => $('ai-input')?.focus(), 300);
 }
-function closeAI() { $('ai-panel').classList.remove('open'); }
+function closeAI() {
+  $('ai-panel').classList.remove('open');
+  const fab=$('ai-fab'); if(fab) fab.style.display='flex';
+}
 
 function addAIMessage(role, text) {
-  const container = $('ai-messages');
+  const container = $('ai-msgs');
   if(!container) return;
   const div = document.createElement('div');
   div.className = `ai-msg ${role}`;
-  div.textContent = text;
+  const bub = document.createElement('div');
+  bub.className = 'ai-bubble';
+  bub.textContent = text;
+  div.appendChild(bub);
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
@@ -2025,11 +1914,12 @@ async function sendAI() {
 async function sendAIMsg(q) {
   if(aiTyping) return;
   aiTyping = true;
-  $('ai-status').textContent = '● Pensando...'; $('ai-status').style.color = 'var(--warn)';
+  $('ai-st').textContent = '● Pensando...'; $('ai-st').style.color = 'var(--warn)';
   // Show typing
-  const container = $('ai-messages');
+  const container = $('ai-msgs');
   const typingDiv = document.createElement('div');
-  typingDiv.className = 'ai-msg bot typing'; typingDiv.id = 'ai-typing'; typingDiv.textContent = '...';
+  typingDiv.className = 'ai-msg bot'; typingDiv.id = 'ai-typing';
+  typingDiv.innerHTML = '<div class="ai-bubble"><div class="ai-typing"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div></div>';
   container?.appendChild(typingDiv); container.scrollTop = container.scrollHeight;
 
   aiMessages.push({role:'user', content:q});
@@ -2039,7 +1929,7 @@ async function sendAIMsg(q) {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        messages: aiMessages.slice(-8), // Keep last 8 for context
+        messages: aiMessages.slice(-8),
         context: {
           zone_level: lastZone||'verde',
           city: curCity,
@@ -2063,7 +1953,7 @@ async function sendAIMsg(q) {
     typingDiv.remove();
     addAIMessage('bot', '⚠️ Sin conexión a la IA. Verifica que el backend esté corriendo.');
   }
-  $('ai-status').textContent = '● En línea'; $('ai-status').style.color = 'var(--ok)';
+  $('ai-st').textContent = '● En línea'; $('ai-st').style.color = 'var(--ok)';
   aiTyping = false;
 }
 
@@ -2073,7 +1963,6 @@ function askAIAboutZone(zoneName, level) {
   setTimeout(() => sendAIMsg(`¿Qué me recomiendas sobre la zona "${zoneName}" (nivel: ${level})? ¿Cómo puedo circular seguro por ahí?`), 300);
 }
 
-// ── MENU ───────────────────────────────────────
 function showMenu() { updateMenu(); showEl('m-menu'); }
 function hideMenu() { hideEl('m-menu'); }
 
@@ -2085,7 +1974,7 @@ async function updateMenu() {
   if(mrpts) mrpts.textContent=me.reports_count||0;
   if(me.photo) { const ma=$('menu-av'); if(ma) ma.innerHTML=`<img src="${me.photo}" style="width:100%;height:100%;object-fit:cover">`; }
   // Premium badge
-  if(me.is_premium) { const pb=$('mpremium-badge'); if(pb) pb.style.display='block'; const pBtn=$('premium-btn'); if(pBtn) { pBtn.textContent='⭐'; pBtn.style.color='var(--gold)'; } }
+  if(me.is_premium) { const pb=$('mprem-badge'); if(pb) pb.style.display='block'; const pBtn=$('prem-btn'); if(pBtn) { pBtn.textContent='⭐'; pBtn.style.color='var(--gold)'; } }
   if(!me.id.startsWith('guest_')) {
     try {
       const r=await fetch(`${API}/api/stats/user/${me.id}`); const d=await r.json();
@@ -2105,7 +1994,6 @@ function doLogout() {
   localStorage.removeItem('zu3'); localStorage.removeItem('zt3'); location.reload();
 }
 
-// ── HISTORY ────────────────────────────────────
 function showHistory() { loadHist('month', document.querySelector('.ptab.on')||document.querySelector('.ptab')); showEl('m-hist'); }
 
 async function loadHist(period, btn) {
@@ -2154,7 +2042,6 @@ function renderBarChart(monthly) {
   }).join('');
 }
 
-// ── TIPS MODAL ─────────────────────────────────
 function showTips() { loadTipsModal(); showEl('m-tips'); }
 async function loadTipsModal() {
   const tl=$('tipslist'); if(!tl) return;
@@ -2167,7 +2054,6 @@ async function loadTipsModal() {
   }
 }
 
-// ── PREMIUM ────────────────────────────────────
 async function activatePremium() {
   const code=$('promo-input')?.value.trim().toUpperCase();
   if(!code) return toast('Ingresa un código','var(--warn)','⚠️');
@@ -2181,12 +2067,11 @@ async function activatePremium() {
       toast(`✅ Premium activado por ${d.days} días`,'var(--gold)','⭐');
       hideEl('m-premium');
       const banner=$('ad-banner'); if(banner) banner.classList.add('hidden');
-      const pBtn=$('premium-btn'); if(pBtn) { pBtn.textContent='⭐'; pBtn.style.color='var(--gold)'; }
+      const pBtn=$('prem-btn'); if(pBtn) { pBtn.textContent='⭐'; pBtn.style.color='var(--gold)'; }
     } else toast(d.message||'Código inválido','var(--err)','❌');
   } catch { hideLoad(); toast('Sin conexión','var(--err)','⚠️'); }
 }
 
-// ── REVIEW ─────────────────────────────────────
 function openReview(id) {
   if(!me || me.id.startsWith('guest_')) return toast('Necesitas cuenta para reseñar','var(--warn)','⚠️');
   rvPlaceId=id; rvRating=5; setStar(5);
@@ -2213,13 +2098,12 @@ async function submitReview() {
 }
 function prevAv(e) { const f=e.target.files[0]; if(!f) return; const rd=new FileReader(); rd.onload=ev=>{ regPhoto=ev.target.result; const avp=$('avp'); if(avp) avp.innerHTML=`<img src="${regPhoto}">`; }; rd.readAsDataURL(f); }
 
-// ── VOICE ──────────────────────────────────────
 function toggleVoice() {
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR) return toast('Voz no soportada en este navegador','var(--warn)','⚠️');
   const btn=$('fVoice');
   if(voiceRec) { voiceRec.stop(); voiceRec=null; btn?.classList.remove('active'); return; }
-  voiceRec=new SR(); voiceRec.lang=currentLang==='es'?'es-MX':currentLang==='en'?'en-US':'es-MX';
+  voiceRec=new SR(); voiceRec.lang=curLang==='es'?'es-MX':curLang==='en'?'en-US':'es-MX';
   voiceRec.continuous=false;
   btn?.classList.add('active');
   voiceRec.onresult=async e => {
@@ -2238,7 +2122,6 @@ function toggleVoice() {
   toast('Escuchando... habla ahora','var(--cyan)','🎤');
 }
 
-// ── ADMIN ──────────────────────────────────────
 function logoTap() {
   logoTaps++; clearTimeout(logoTimer);
   logoTimer=setTimeout(()=>logoTaps=0, 2000);
@@ -2315,7 +2198,7 @@ async function aiReviewReport(id, description, severity) {
 }
 
 async function loadAdminZoneReqs() {
-  const el=$('adm-zone-req-list'); if(!el) return;
+  const el=$('adm-zreqs-list'); if(!el) return;
   try {
     const r=await fetch(`${API}/api/zones/requests`, {headers:{'X-Admin-Token':adminToken||''}}); const d=await r.json();
     const list=d.requests||[];
@@ -2390,10 +2273,8 @@ async function adminBroadcast() {
   toast('Broadcast enviado (requiere implementación push notifications)','var(--cyan)','📢');
 }
 
-// ── EMERGENCIAS ────────────────────────────────
 function callEmg(num) { window.location.href = `tel:${num}`; }
 
-// ── CLEANUP ────────────────────────────────────
 window.addEventListener('beforeunload', () => {
   if(watchId) navigator.geolocation.clearWatch(watchId);
   if(trackTimer) clearInterval(trackTimer);
